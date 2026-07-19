@@ -164,6 +164,7 @@
                 <div class="flex-1 min-w-0">
                     <p id="sidebarUserName" class="text-xs font-bold text-slate-100 truncate">Administrador</p>
                     <span id="sidebarUserRole" class="text-[9px] text-emerald-400 font-bold uppercase">Nivel Master</span>
+                    <span id="usuario-logado-nome" class="hidden"></span>
                 </div>
             </div>
             <button onclick="fazerLogout()" class="flex items-center justify-center gap-2 w-full py-2 bg-red-900/60 hover:bg-red-800 text-red-200 hover:text-white rounded-lg text-xs font-bold transition border border-red-800/50">
@@ -279,7 +280,17 @@
                                 <h3 class="text-sm font-extrabold text-slate-800 uppercase tracking-wide">Fila de Publicação de Jogos</h3>
                                 <p class="text-[11px] text-slate-400">Confirme os placares e dados antes de publicar no Portal Público</p>
                             </div>
-                            <span id="contadorPendentes" class="text-xs bg-amber-50 text-amber-800 font-bold px-2.5 py-1 rounded-md border border-amber-100">3 Pendentes</span>
+                            <div class="flex items-center gap-3">
+                                <select id="filtroFase" onchange="renderizarFilaJogos()" class="bg-slate-50 border border-slate-200 rounded-lg py-1.5 px-3 text-xs font-semibold text-slate-800 focus:outline-none focus:border-emerald-500 transition">
+                                    <option value="todos">Todas as Fases</option>
+                                    <option value="Fase de Grupos">Fase de Grupos</option>
+                                    <option value="Semifinal">Semifinal</option>
+                                    <option value="Final">Final</option>
+                                    <option value="Disputa 3º Lugar">Disputa 3º Lugar</option>
+                                    <option value="Disputa 5º Lugar">Disputa 5º Lugar</option>
+                                </select>
+                                <span id="contadorPendentes" class="text-xs bg-amber-50 text-amber-800 font-bold px-2.5 py-1 rounded-md border border-amber-100">3 Pendentes</span>
+                            </div>
                         </div>
 
                         <div class="overflow-x-auto">
@@ -310,7 +321,7 @@
                             <button class="text-xs font-bold text-emerald-600 hover:text-emerald-800 transition">Ver Escalas</button>
                         </div>
 
-                        <div class="space-y-3.5">
+                        <div id="listaEscalasArbitros" class="space-y-3.5">
                             <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 flex flex-col gap-2">
                                 <div class="flex items-center justify-between border-b border-slate-200/60 pb-1.5 text-[10px] font-bold text-slate-500">
                                     <span>JOGO #19 — HOJE 15:00</span>
@@ -368,6 +379,10 @@
             </div>
 
             <form onsubmit="salvarSumula(event)" class="flex-1 overflow-y-auto p-6 space-y-6">
+                <input type="hidden" id="sumulaJogoId" value="">
+                <input type="hidden" id="sumulaEquipeCasa" value="">
+                <input type="hidden" id="sumulaEquipeFora" value="">
+                <h4 id="sumulaTitle" class="font-extrabold text-sm text-slate-800 uppercase tracking-wide">Súmula</h4>
                 <div class="bg-slate-50 p-4 rounded-xl border border-slate-200/60 flex items-center justify-between gap-4">
                     <div class="text-center w-2/5 space-y-2">
                         <p id="labelTimeCasa" class="font-black text-slate-800 text-base">TIME CASA</p>
@@ -409,6 +424,11 @@
                     </div>
                 </div>
 
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Observações</label>
+                    <textarea id="sumulaObservacoes" rows="3" class="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 px-3 text-xs font-semibold text-slate-800 focus:outline-none focus:border-emerald-500 transition resize-none" placeholder="Observações sobre o jogo..."></textarea>
+                </div>
+
                 <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100 shrink-0">
                     <button type="button" onclick="fecharModalSumula()" class="px-4 py-2 text-xs font-extrabold text-slate-500 hover:text-slate-800 transition uppercase">Cancelar</button>
                     <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold px-5 py-2.5 rounded-lg text-xs uppercase tracking-wider transition shadow">Publicar Súmula</button>
@@ -431,13 +451,13 @@
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Time Mandante</label>
-                                <select id="selectMandante" required class="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 px-3 text-xs font-semibold text-slate-800 focus:outline-none focus:border-emerald-500 focus:bg-white transition">
+                                <select id="selectMandante" required class="select-equipe-global w-full bg-slate-50 border border-slate-200 rounded-lg py-2 px-3 text-xs font-semibold text-slate-800 focus:outline-none focus:border-emerald-500 focus:bg-white transition">
                                     <option value="">Selecione...</option>
                                 </select>
                     </div>
                     <div>
                         <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Time Visitante</label>
-                                <select id="selectVisitante" required class="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 px-3 text-xs font-semibold text-slate-800 focus:outline-none focus:border-emerald-500 focus:bg-white transition">
+                                <select id="selectVisitante" required class="select-equipe-global w-full bg-slate-50 border border-slate-200 rounded-lg py-2 px-3 text-xs font-semibold text-slate-800 focus:outline-none focus:border-emerald-500 focus:bg-white transition">
                                     <option value="">Selecione...</option>
                                 </select>
                     </div>
@@ -455,6 +475,27 @@
                     <div>
                         <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Rodada</label>
                         <input type="number" id="partidaRodada" min="1" max="20" required class="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 px-3 text-xs font-semibold text-slate-800 focus:outline-none focus:border-emerald-500 focus:bg-white transition" placeholder="Ex: 5">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Placar Casa</label>
+                        <input type="number" id="partidaPlacarCasa" min="0" value="0" class="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 px-3 text-xs font-semibold text-slate-800 focus:outline-none focus:border-emerald-500 focus:bg-white transition" placeholder="0">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Placar Fora</label>
+                        <input type="number" id="partidaPlacarFora" min="0" value="0" class="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 px-3 text-xs font-semibold text-slate-800 focus:outline-none focus:border-emerald-500 focus:bg-white transition" placeholder="0">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Fase</label>
+                        <select id="partidaFase" class="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 px-3 text-xs font-semibold text-slate-800 focus:outline-none focus:border-emerald-500 focus:bg-white transition">
+                            <option value="Fase de Grupos">Fase de Grupos</option>
+                            <option value="Semifinal">Semifinal</option>
+                            <option value="Final">Final</option>
+                            <option value="Disputa 3º Lugar">Disputa 3º Lugar</option>
+                            <option value="Disputa 5º Lugar">Disputa 5º Lugar</option>
+                        </select>
                     </div>
                 </div>
 
@@ -486,13 +527,13 @@
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Time Mandante</label>
-                                <select id="editSelectMandante" required class="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 px-3 text-xs font-semibold text-slate-800 focus:outline-none focus:border-blue-500 focus:bg-white transition">
+                                <select id="editSelectMandante" required class="select-equipe-global w-full bg-slate-50 border border-slate-200 rounded-lg py-2 px-3 text-xs font-semibold text-slate-800 focus:outline-none focus:border-blue-500 focus:bg-white transition">
                                     <option value="">Selecione...</option>
                                 </select>
                     </div>
                     <div>
                         <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Time Visitante</label>
-                                <select id="editSelectVisitante" required class="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 px-3 text-xs font-semibold text-slate-800 focus:outline-none focus:border-blue-500 focus:bg-white transition">
+                                <select id="editSelectVisitante" required class="select-equipe-global w-full bg-slate-50 border border-slate-200 rounded-lg py-2 px-3 text-xs font-semibold text-slate-800 focus:outline-none focus:border-blue-500 focus:bg-white transition">
                                     <option value="">Selecione...</option>
                                 </select>
                     </div>
@@ -536,6 +577,17 @@
                             <option value="Publicado">Publicado</option>
                         </select>
                     </div>
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Fase</label>
+                    <select id="editarPartidaFase" class="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 px-3 text-xs font-semibold text-slate-800 focus:outline-none focus:border-blue-500 focus:bg-white transition">
+                        <option value="Fase de Grupos">Fase de Grupos</option>
+                        <option value="Semifinal">Semifinal</option>
+                        <option value="Final">Final</option>
+                        <option value="Disputa 3º Lugar">Disputa 3º Lugar</option>
+                        <option value="Disputa 5º Lugar">Disputa 5º Lugar</option>
+                    </select>
                 </div>
 
                 <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
@@ -592,17 +644,18 @@
 
             <!-- Abas -->
             <div class="flex border-b border-slate-200 shrink-0">
-                <button id="abaAdicionar" onclick="trocarAbaAtleta('adicionar')" class="flex-1 py-3 text-xs font-bold uppercase tracking-wide text-emerald-700 border-b-2 border-emerald-600 bg-emerald-50 transition">
+                <button id="abaAdicionar" onclick="trocarAbaAtleta('adicionar')" data-aba-atleta="adicionar" class="btn-aba-atleta flex-1 py-3 text-xs font-bold uppercase tracking-wide text-emerald-700 border-b-2 border-emerald-600 bg-emerald-50 transition">
                     <i class="fa-solid fa-user-plus mr-1"></i> Adicionar Atleta
                 </button>
-                <button id="abaListar" onclick="trocarAbaAtleta('listar')" class="flex-1 py-3 text-xs font-bold uppercase tracking-wide text-slate-400 hover:text-slate-700 border-b-2 border-transparent hover:border-slate-300 transition">
+                <button id="abaListar" onclick="trocarAbaAtleta('listar')" data-aba-atleta="listar" class="btn-aba-atleta flex-1 py-3 text-xs font-bold uppercase tracking-wide text-slate-400 hover:text-slate-700 border-b-2 border-transparent hover:border-slate-300 transition">
                     <i class="fa-solid fa-list mr-1"></i> Ver / Editar Atletas
                 </button>
             </div>
 
             <!-- Aba Adicionar -->
-            <div id="painelAdicionar" class="flex-1 overflow-y-auto">
+            <div id="abaAtletaadicionar" class="aba-atleta flex-1 overflow-y-auto">
                 <form onsubmit="salvarAtleta(event)" class="p-6 space-y-4">
+                    <input type="hidden" id="formAtletaIndice" value="-1">
                     <div>
                         <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Nome Completo</label>
                         <input type="text" id="atletaNome" required class="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 px-3 text-xs font-semibold text-slate-800 focus:outline-none focus:border-emerald-500 focus:bg-white transition" placeholder="Digite o nome completo do atleta">
@@ -633,7 +686,7 @@
                     </div>
                     <div>
                         <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Equipe / Clube</label>
-                        <select id="atletaEquipe" required class="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 px-3 text-xs font-semibold text-slate-800 focus:outline-none focus:border-emerald-500 focus:bg-white transition">
+                        <select id="atletaEquipe" required class="select-equipe-atleta w-full bg-slate-50 border border-slate-200 rounded-lg py-2 px-3 text-xs font-semibold text-slate-800 focus:outline-none focus:border-emerald-500 focus:bg-white transition">
                             <option value="">Selecione a equipe...</option>
                         </select>
                     </div>
@@ -645,7 +698,7 @@
             </div>
 
             <!-- Aba Listar / Editar -->
-            <div id="painelListar" class="flex-1 overflow-y-auto hidden">
+            <div id="abaAtletaListar" class="aba-atleta flex-1 overflow-y-auto hidden">
                 <div class="p-4 border-b border-slate-100">
                     <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Filtrar por Equipe</label>
                     <select id="filtroEquipeAtletas" onchange="renderizarListaAtletas()" class="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 px-3 text-xs font-semibold text-slate-800 focus:outline-none focus:border-emerald-500 transition">
@@ -699,7 +752,7 @@
                 </div>
                 <div>
                     <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Equipe / Clube</label>
-                    <select id="editAtletaEquipe" required class="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 px-3 text-xs font-semibold text-slate-800 focus:outline-none focus:border-emerald-500 focus:bg-white transition">
+                    <select id="editAtletaEquipe" required class="select-equipe-atleta w-full bg-slate-50 border border-slate-200 rounded-lg py-2 px-3 text-xs font-semibold text-slate-800 focus:outline-none focus:border-emerald-500 focus:bg-white transition">
                     </select>
                 </div>
                 <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
@@ -723,17 +776,18 @@
 
             <!-- Abas -->
             <div class="flex border-b border-slate-200 shrink-0">
-                <button id="abaNovaEquipe" onclick="trocarAbaEquipe('nova')" class="flex-1 py-3 text-xs font-bold uppercase tracking-wide text-blue-700 border-b-2 border-blue-600 bg-blue-50 transition">
+                <button id="abaNovaEquipe" onclick="trocarAbaEquipe('nova')" data-aba-equipe="nova" class="btn-aba-equipe flex-1 py-3 text-xs font-bold uppercase tracking-wide text-blue-700 border-b-2 border-blue-600 bg-blue-50 transition">
                     <i class="fa-solid fa-plus mr-1"></i> Cadastrar Equipe
                 </button>
-                <button id="abaListarEquipes" onclick="trocarAbaEquipe('listar')" class="flex-1 py-3 text-xs font-bold uppercase tracking-wide text-slate-400 hover:text-slate-700 border-b-2 border-transparent hover:border-slate-300 transition">
+                <button id="abaListarEquipes" onclick="trocarAbaEquipe('listar')" data-aba-equipe="listar" class="btn-aba-equipe flex-1 py-3 text-xs font-bold uppercase tracking-wide text-slate-400 hover:text-slate-700 border-b-2 border-transparent hover:border-slate-300 transition">
                     <i class="fa-solid fa-list mr-1"></i> Ver / Editar Equipes
                 </button>
             </div>
 
             <!-- Aba Cadastrar -->
-            <div id="painelNovaEquipe" class="flex-1 overflow-y-auto">
+            <div id="abaEquipenova" class="aba-equipe flex-1 overflow-y-auto">
                 <form onsubmit="salvarEquipe(event)" class="p-6 space-y-4">
+                    <input type="hidden" id="formEquipeIndice" value="-1">
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Nome / Sigla da Equipe</label>
@@ -773,7 +827,7 @@
             </div>
 
             <!-- Aba Listar / Gerenciar -->
-            <div id="painelListarEquipes" class="flex-1 overflow-y-auto hidden">
+            <div id="abaEquipeListar" class="aba-equipe flex-1 overflow-y-auto hidden">
                 <div id="listaEquipesGerenciar" class="p-4 space-y-2"></div>
             </div>
         </div>
@@ -790,6 +844,7 @@
                 <button onclick="fecharModalEditarEquipe()" class="text-slate-300 hover:text-white transition text-lg">&times;</button>
             </div>
             <form onsubmit="salvarEdicaoEquipe(event)" class="p-6 space-y-4">
+                <input type="hidden" id="editarEquipeId" value="">
                 <input type="hidden" id="editEquipeNomeOriginal">
                 <div class="grid grid-cols-2 gap-4">
                     <div>
@@ -836,18 +891,18 @@
             </div>
 
             <div class="flex border-b border-slate-200 shrink-0">
-                <button id="abaCadastrarProf" onclick="trocarAbaProfissional('cadastrar')" class="flex-1 py-3 text-xs font-bold uppercase tracking-wide text-indigo-700 border-b-2 border-indigo-600 bg-indigo-50 transition">
+                <button id="abaCadastrarProf" onclick="trocarAbaProfissional('form')" data-aba-profissional="form" class="btn-aba-profissional flex-1 py-3 text-xs font-bold uppercase tracking-wide text-indigo-700 border-b-2 border-indigo-600 bg-indigo-50 transition">
                     <i class="fa-solid fa-user-plus mr-1"></i> Cadastrar
                 </button>
-                <button id="abaListarProf" onclick="trocarAbaProfissional('listar')" class="flex-1 py-3 text-xs font-bold uppercase tracking-wide text-slate-400 hover:text-slate-700 border-b-2 border-transparent hover:border-slate-300 transition">
+                <button id="abaListarProf" onclick="trocarAbaProfissional('lista')" data-aba-profissional="lista" class="btn-aba-profissional flex-1 py-3 text-xs font-bold uppercase tracking-wide text-slate-400 hover:text-slate-700 border-b-2 border-transparent hover:border-slate-300 transition">
                     <i class="fa-solid fa-list mr-1"></i> Ver / Editar
                 </button>
-                <button id="abaImportarProf" onclick="trocarAbaProfissional('importar')" class="flex-1 py-3 text-xs font-bold uppercase tracking-wide text-slate-400 hover:text-slate-700 border-b-2 border-transparent hover:border-slate-300 transition">
+                <button id="abaImportarProf" onclick="trocarAbaProfissional('importar')" data-aba-profissional="importar" class="btn-aba-profissional flex-1 py-3 text-xs font-bold uppercase tracking-wide text-slate-400 hover:text-slate-700 border-b-2 border-transparent hover:border-slate-300 transition">
                     <i class="fa-solid fa-file-import mr-1"></i> Importar
                 </button>
             </div>
 
-            <div id="painelCadastrarProf" class="flex-1 overflow-y-auto">
+            <div id="abaProfissionalForm" class="aba-profissional flex-1 overflow-y-auto">
                 <form onsubmit="salvarProfissional(event)" class="p-6 space-y-4">
                     <input type="hidden" id="profissionalEditId" value="">
                     <div>
@@ -879,6 +934,10 @@
                         <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Cidade</label>
                         <input type="text" id="profissionalCidade" required class="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 px-3 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500 focus:bg-white transition" placeholder="Ex: Joinville">
                     </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">CREF (opcional)</label>
+                        <input type="text" id="inputProfissionalCREF" class="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 px-3 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500 focus:bg-white transition" placeholder="Ex: 12345">
+                    </div>
                     <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
                         <button type="button" onclick="limparFormProfissional()" class="px-4 py-2 text-xs font-extrabold text-slate-500 hover:text-slate-800 transition uppercase">Limpar</button>
                         <button type="submit" class="bg-indigo-700 hover:bg-indigo-800 text-white font-extrabold px-5 py-2.5 rounded-lg text-xs uppercase tracking-wider transition shadow">
@@ -888,7 +947,7 @@
                 </form>
             </div>
 
-            <div id="painelListarProf" class="flex-1 overflow-y-auto hidden">
+            <div id="abaProfissionalLista" class="aba-profissional flex-1 overflow-y-auto hidden">
                 <div class="p-4 border-b border-slate-100 space-y-2">
                     <div>
                         <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Filtrar por Funcao</label>
@@ -906,7 +965,7 @@
                 <div id="listaProfissionais" class="p-4 space-y-2"></div>
             </div>
 
-            <div id="painelImportarProf" class="flex-1 overflow-y-auto hidden p-4 space-y-3">
+            <div id="abaProfissionalImportar" class="aba-profissional flex-1 overflow-y-auto hidden p-4 space-y-3">
                 <div class="bg-indigo-50 border border-indigo-200 rounded-lg p-3">
                     <p class="text-[10px] font-bold text-indigo-800 uppercase mb-1"><i class="fa-solid fa-info-circle mr-1"></i> Formato aceito</p>
                     <p class="text-[10px] text-indigo-600 leading-relaxed">Cada linha deve conter: <strong>Nome | Funcao | Categoria | Cidade</strong> separados por TAB ou pipe (|).<br>Funcoes: <code>Arbitro (A)</code>, <code>Mesario (A)</code>, <code>Classificador (A)</code><br>Categorias: <code>Internacional</code>, <code>Nacional</code>, <code>Estadual</code>, <code>Novato</code></p>
@@ -1068,6 +1127,44 @@
                                 <option value="">Selecione...</option>
                             </select>
                         </div>
+                    </div>
+
+                    <div class="border-b border-slate-100 pb-2">
+                        <h5 class="text-xs font-black text-slate-700 uppercase tracking-wide">Jurados</h5>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Jurado 1</label>
+                            <select id="escalaJurado1" class="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 px-3 text-xs font-semibold text-slate-800 focus:outline-none focus:border-teal-500 focus:bg-white transition">
+                                <option value="">Selecione...</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Jurado 2</label>
+                            <select id="escalaJurado2" class="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 px-3 text-xs font-semibold text-slate-800 focus:outline-none focus:border-teal-500 focus:bg-white transition">
+                                <option value="">Selecione...</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Jurado 3</label>
+                            <select id="escalaJurado3" class="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 px-3 text-xs font-semibold text-slate-800 focus:outline-none focus:border-teal-500 focus:bg-white transition">
+                                <option value="">Selecione...</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Jurado 4</label>
+                            <select id="escalaJurado4" class="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 px-3 text-xs font-semibold text-slate-800 focus:outline-none focus:border-teal-500 focus:bg-white transition">
+                                <option value="">Selecione...</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Delegado</label>
+                        <select id="escalaDelegado" class="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 px-3 text-xs font-semibold text-slate-800 focus:outline-none focus:border-teal-500 focus:bg-white transition">
+                            <option value="">Selecione...</option>
+                        </select>
                     </div>
 
                     <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">

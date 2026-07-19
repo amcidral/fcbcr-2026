@@ -4,6 +4,37 @@
    ============================================================ */
 
 // ────────────────────────────────────────────
+// 0. COMPATIBILIDADE DE IDs (HTML ↔ JS)
+// ────────────────────────────────────────────
+const _ID_MAP = {
+  formUsuarioIndice:'usuarioEditId', inputUsuarioLogin:'usuarioLogin',
+  inputUsuarioNome:'usuarioNome', inputUsuarioSenha:'usuarioSenha',
+  inputUsuarioPerfil:'usuarioRole', listaJogosAdmin:'tabelaJogosFila',
+  editarPartidaId:'editPartidaId', editarPartidaData:'editPartidaData',
+  editarPartidaHora:'editPartidaHora', editarPartidaCasa:'editSelectMandante',
+  editarPartidaFora:'editSelectVisitante', editarPartidaPlacarCasa:'editPartidaPtCasa',
+  editarPartidaPlacarFora:'editPartidaPtFora', editarPartidaRodada:'editPartidaRodada',
+  editarPartidaLocal:'editPartidaLocal', partidaEquipeCasa:'selectMandante',
+  partidaEquipeFora:'selectVisitante', listaAtletas:'listaAtletasGerenciar',
+  inputAtletaNome:'atletaNome', inputAtletaNumero:'atletaCamisa',
+  inputAtletaPosicao:'atletaClasse', inputAtletaEquipe:'atletaEquipe', editarAtletaId:'editAtletaId',
+  editarAtletaNome:'editAtletaNome', editarAtletaNumero:'editAtletaCamisa',
+  editarAtletaPosicao:'editAtletaClasse', editarAtletaEquipe:'editAtletaEquipe',
+  listaEquipes:'listaEquipesGerenciar', inputEquipeNome:'equipeNome',
+  inputEquipeLogo:'equipeLogo', editarEquipeNome:'editEquipeNome',
+  editarEquipeLogo:'editEquipeLogo', formProfissionalIndice:'profissionalEditId',
+  inputProfissionalNome:'profissionalNome', inputProfissionalCidade:'profissionalCidade',
+  inputProfissionalCategoria:'profissionalCategoria', inputProfissionalFuncao:'profissionalFuncao',
+  importarProfissionaisTexto:'textoImportarProf', sumulaPlacarCasa:'pontosCasa',
+  sumulaPlacarFora:'pontosFora', sumulaAtletasCasa:'listaAtletasCasa',
+  sumulaAtletasFora:'listaAtletasFora'
+};
+const _getElementById = document.getElementById.bind(document);
+document.getElementById = function(id) {
+  return _getElementById(_ID_MAP[id] || id);
+};
+
+// ────────────────────────────────────────────
 // 1. CONFIGURAÇÃO PADRÃO
 // ────────────────────────────────────────────
 const CONFIG_DEFAULTS = {
@@ -936,7 +967,7 @@ function abrirModalAtleta() {
     document.getElementById('formAtletaIndice').value = '-1';
     document.getElementById('inputAtletaNome').value = '';
     document.getElementById('inputAtletaNumero').value = '';
-    document.getElementById('inputAtletaPosicao').value = 'Ala';
+    document.getElementById('inputAtletaPosicao').value = '1.0';
     document.getElementById('inputAtletaEquipe').value = '';
   }
 }
