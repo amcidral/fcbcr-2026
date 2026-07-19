@@ -46,7 +46,7 @@
                 <h2 class="text-lg font-black text-slate-800 uppercase tracking-wide">Painel Administrativo</h2>
                 <p class="text-[10px] text-slate-400 font-bold uppercase mt-1">FCBCR — Federacao Catarinense de BCR</p>
             </div>
-            <form onsubmit="fazerLogin(event)" class="space-y-4">
+            <form onsubmit="event.preventDefault(); loginFormSubmit()" class="space-y-4">
                 <div>
                     <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Usuario</label>
                     <input type="text" id="loginUsuario" required class="w-full bg-slate-50 border border-slate-200 rounded-lg py-2.5 px-3 text-xs font-semibold text-slate-800 focus:outline-none focus:border-emerald-500 transition" placeholder="Digite seu usuario" autocomplete="off">

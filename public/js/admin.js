@@ -128,6 +128,24 @@ function fazerLogin(login, senha) {
   return null;
 }
 
+function loginFormSubmit() {
+  const login = document.getElementById('loginUsuario').value.trim();
+  const senha = document.getElementById('loginSenha').value;
+  const resultado = fazerLogin(login, senha);
+  if (resultado) {
+    document.getElementById('loginOverlay').style.display = 'none';
+    aplicarControleAcesso();
+    popularSelectsEquipesGlobais();
+    renderizarFilaJogos();
+    renderizarEscalaArbitros();
+    showToast('Bem-vindo, ' + resultado.nome + '!', 'sucesso');
+  } else {
+    const erro = document.getElementById('loginErro');
+    if (erro) erro.classList.remove('hidden');
+    setTimeout(function () { if (erro) erro.classList.add('hidden'); }, 3000);
+  }
+}
+
 function fazerLogout() {
   localStorage.removeItem('fcbcr_usuarioLogado');
   window.location.href = 'index.html';
@@ -142,10 +160,12 @@ function getUsuarioLogado() {
 
 function aplicarControleAcesso() {
   const usuario = getUsuarioLogado();
+  const overlay = document.getElementById('loginOverlay');
   if (!usuario) {
-    window.location.href = 'index.html';
+    if (overlay) overlay.style.display = 'flex';
     return;
   }
+  if (overlay) overlay.style.display = 'none';
   document.querySelectorAll('[data-perfil]').forEach(function (el) {
     const perfis = el.getAttribute('data-perfil').split(',');
     if (!perfis.includes(usuario.perfil)) {
