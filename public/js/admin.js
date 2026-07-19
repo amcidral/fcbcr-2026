@@ -1232,14 +1232,23 @@ function importarProfissionais() {
   let importados = 0;
 
   linhas.forEach(function (linha) {
-    const partes = linha.split('\t');
+    linha = linha.trim();
+    if (!linha) return;
+    let partes;
+    if (linha.indexOf('\t') !== -1) {
+      partes = linha.split('\t');
+    } else if (linha.indexOf('|') !== -1) {
+      partes = linha.split('|');
+    } else {
+      partes = linha.split('\t');
+    }
     if (partes.length < 3) return;
 
-    const nome = (partes[0] || '').trim();
-    const cidade = (partes[1] || '').trim();
-    const categoria = (partes[2] || '').trim();
-    const funcao = (partes[3] || '').trim();
-    const cref = (partes[4] || '').trim();
+    const nome = (partes[1] || '').trim();
+    const funcao = (partes[2] || '').trim();
+    const categoria = (partes[3] || '').trim();
+    const cidade = (partes[4] || '').trim();
+    const cref = (partes[5] || '').trim();
 
     if (!nome) return;
 
@@ -1249,8 +1258,8 @@ function importarProfissionais() {
       id: novoId,
       nome: nome,
       cidade: cidade,
-      categoria: categoria || 'Árbitro',
-      funcao: funcao || 'Técnico',
+      categoria: categoria || 'Estadual',
+      funcao: funcao || 'Mesario (A)',
       cref: cref
     });
     importados++;

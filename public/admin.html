@@ -85,7 +85,7 @@
     <div id="modalFormUsuario" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-[60] flex items-center justify-center" style="display:none">
         <div class="bg-white rounded-2xl w-full max-w-sm shadow-2xl border border-slate-200 overflow-hidden transform scale-95 transition-transform duration-300 p-6">
             <h4 class="font-extrabold text-sm text-slate-800 uppercase tracking-wide mb-4" id="formUsuarioTitulo">Novo Usuario</h4>
-            <form onsubmit="salvarUsuario(event)" class="space-y-3">
+            <form onsubmit="event.preventDefault(); salvarUsuario()" class="space-y-3">
                 <input type="hidden" id="usuarioEditId" value="">
                 <div>
                     <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Nome Completo</label>
@@ -378,7 +378,7 @@
                 <button onclick="fecharModalSumula()" class="text-slate-300 hover:text-white transition text-lg">&times;</button>
             </div>
 
-            <form onsubmit="salvarSumula(event)" class="flex-1 overflow-y-auto p-6 space-y-6">
+            <form onsubmit="event.preventDefault(); salvarSumula()" class="flex-1 overflow-y-auto p-6 space-y-6">
                 <input type="hidden" id="sumulaJogoId" value="">
                 <input type="hidden" id="sumulaEquipeCasa" value="">
                 <input type="hidden" id="sumulaEquipeFora" value="">
@@ -447,7 +447,7 @@
                 <button onclick="fecharModalPartida()" class="text-slate-300 hover:text-white transition text-lg">&times;</button>
             </div>
 
-            <form onsubmit="salvarPartida(event)" class="p-6 space-y-4">
+            <form onsubmit="event.preventDefault(); salvarPartida()" class="p-6 space-y-4">
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Time Mandante</label>
@@ -522,7 +522,7 @@
                 <button onclick="fecharModalEditarPartida()" class="text-slate-300 hover:text-white transition text-lg">&times;</button>
             </div>
 
-            <form onsubmit="salvarEdicaoPartida(event)" class="p-6 space-y-4">
+            <form onsubmit="event.preventDefault(); salvarEdicaoPartida()" class="p-6 space-y-4">
                 <input type="hidden" id="editPartidaId">
                 <div class="grid grid-cols-2 gap-4">
                     <div>
@@ -654,7 +654,7 @@
 
             <!-- Aba Adicionar -->
             <div id="abaAtletaadicionar" class="aba-atleta flex-1 overflow-y-auto">
-                <form onsubmit="salvarAtleta(event)" class="p-6 space-y-4">
+                <form onsubmit="event.preventDefault(); salvarAtleta()" class="p-6 space-y-4">
                     <input type="hidden" id="formAtletaIndice" value="-1">
                     <div>
                         <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Nome Completo</label>
@@ -698,7 +698,7 @@
             </div>
 
             <!-- Aba Listar / Editar -->
-            <div id="abaAtletaListar" class="aba-atleta flex-1 overflow-y-auto hidden">
+            <div id="abaAtletaListar" class="aba-atleta flex-1 overflow-y-auto" style="display:none">
                 <div class="p-4 border-b border-slate-100">
                     <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Filtrar por Equipe</label>
                     <select id="filtroEquipeAtletas" onchange="renderizarListaAtletas()" class="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 px-3 text-xs font-semibold text-slate-800 focus:outline-none focus:border-emerald-500 transition">
@@ -720,7 +720,7 @@
                 </div>
                 <button onclick="fecharModalEditarAtleta()" class="text-slate-300 hover:text-white transition text-lg">&times;</button>
             </div>
-            <form onsubmit="salvarEdicaoAtleta(event)" class="p-6 space-y-4">
+            <form onsubmit="event.preventDefault(); salvarEdicaoAtleta()" class="p-6 space-y-4">
                 <input type="hidden" id="editAtletaId">
                 <input type="hidden" id="editAtletaEquipeOriginal">
                 <div>
@@ -786,7 +786,7 @@
 
             <!-- Aba Cadastrar -->
             <div id="abaEquipenova" class="aba-equipe flex-1 overflow-y-auto">
-                <form onsubmit="salvarEquipe(event)" class="p-6 space-y-4">
+                <form onsubmit="event.preventDefault(); salvarEquipe()" class="p-6 space-y-4">
                     <input type="hidden" id="formEquipeIndice" value="-1">
                     <div class="grid grid-cols-2 gap-4">
                         <div>
@@ -827,7 +827,7 @@
             </div>
 
             <!-- Aba Listar / Gerenciar -->
-            <div id="abaEquipeListar" class="aba-equipe flex-1 overflow-y-auto hidden">
+            <div id="abaEquipeListar" class="aba-equipe flex-1 overflow-y-auto" style="display:none">
                 <div id="listaEquipesGerenciar" class="p-4 space-y-2"></div>
             </div>
         </div>
@@ -843,7 +843,7 @@
                 </div>
                 <button onclick="fecharModalEditarEquipe()" class="text-slate-300 hover:text-white transition text-lg">&times;</button>
             </div>
-            <form onsubmit="salvarEdicaoEquipe(event)" class="p-6 space-y-4">
+            <form onsubmit="event.preventDefault(); salvarEdicaoEquipe()" class="p-6 space-y-4">
                 <input type="hidden" id="editarEquipeId" value="">
                 <input type="hidden" id="editEquipeNomeOriginal">
                 <div class="grid grid-cols-2 gap-4">
@@ -903,7 +903,7 @@
             </div>
 
             <div id="abaProfissionalForm" class="aba-profissional flex-1 overflow-y-auto">
-                <form onsubmit="salvarProfissional(event)" class="p-6 space-y-4">
+                <form onsubmit="event.preventDefault(); salvarProfissional()" class="p-6 space-y-4">
                     <input type="hidden" id="profissionalEditId" value="">
                     <div>
                         <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Nome Completo</label>
@@ -947,7 +947,7 @@
                 </form>
             </div>
 
-            <div id="abaProfissionalLista" class="aba-profissional flex-1 overflow-y-auto hidden">
+            <div id="abaProfissionalLista" class="aba-profissional flex-1 overflow-y-auto" style="display:none">
                 <div class="p-4 border-b border-slate-100 space-y-2">
                     <div>
                         <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Filtrar por Funcao</label>
@@ -965,7 +965,7 @@
                 <div id="listaProfissionais" class="p-4 space-y-2"></div>
             </div>
 
-            <div id="abaProfissionalImportar" class="aba-profissional flex-1 overflow-y-auto hidden p-4 space-y-3">
+            <div id="abaProfissionalImportar" class="aba-profissional flex-1 overflow-y-auto p-4 space-y-3" style="display:none">
                 <div class="bg-indigo-50 border border-indigo-200 rounded-lg p-3">
                     <p class="text-[10px] font-bold text-indigo-800 uppercase mb-1"><i class="fa-solid fa-info-circle mr-1"></i> Formato aceito</p>
                     <p class="text-[10px] text-indigo-600 leading-relaxed">Cada linha deve conter: <strong>Nome | Funcao | Categoria | Cidade</strong> separados por TAB ou pipe (|).<br>Funcoes: <code>Arbitro (A)</code>, <code>Mesario (A)</code>, <code>Classificador (A)</code><br>Categorias: <code>Internacional</code>, <code>Nacional</code>, <code>Estadual</code>, <code>Novato</code></p>
@@ -1066,12 +1066,12 @@
             </div>
 
             <!-- PASSO 2: Formulario de Escala -->
-            <div id="escalaPasso2" class="hidden">
+            <div id="escalaPasso2" style="display:none">
                 <div class="px-6 pt-4 pb-3 border-b border-slate-100">
                     <p class="text-xs font-bold text-slate-500 uppercase tracking-wider"><i class="fa-solid fa-circle-2 text-teal-600 mr-1"></i> Preencha a Escala</p>
                     <p id="escalaJogoInfo" class="text-[11px] text-slate-400 mt-1"></p>
                 </div>
-                <form onsubmit="salvarEscalaJogo(event)" class="flex-1 overflow-y-auto p-6 space-y-4">
+                <form onsubmit="event.preventDefault(); salvarEscalaJogo()" class="flex-1 overflow-y-auto p-6 space-y-4">
                     <input type="hidden" id="escalaJogoId">
 
                     <div class="grid grid-cols-2 gap-4">
